@@ -100,6 +100,7 @@ def perform_web_requests(urls, treeView):
 		worker = Worker(q, treeView)
 		worker.start()
 		workers.append(worker)
+
 	# Join workers to wait till they finished
 	for worker in workers:
 		pass
@@ -109,7 +110,10 @@ def perform_web_requests(urls, treeView):
 		for t in workers:
 			if not t.is_alive() and not t.handled:
 				t.handled = True
-				card = t.results[0][0] # Read card data
+				try:
+					card = t.results[0][0] # Read card data
+				except IndexError:
+					print("Fucky Wucky", t.results)
 				treeView.item(item=card["name"], values=(True, card["name"], card["set"], card["number"]), tags=("done"))
 				root.update()
 		finished = [t for t in workers if t.handled]
@@ -148,7 +152,7 @@ def fileCallback(name=None):
 			globals()["cardList"]
 			for card in readcards:
 				parsedCard = {}
-				setInfo = card[0].lower().split(":") # Split data into set and number
+				setInfo = card[0].lower().strip("*").split(":") # Split data into set and number
 				parsedCard["set"] = setInfo[0]
 				parsedCard["number"] = setInfo[1]
 				parsedCard["name"] = card[1]
@@ -212,9 +216,6 @@ runButton.place(relx=0.27, rely=0.92, relwidth=0.5, relheight=0.05)
 
 filename_var.trace("w", updateRunButton)
 folder_var.trace("w", updateRunButton)
-
-fileCallback("/home/emma/xmage_small.dck")
-folder_var.set("/home/emma/downloaded_cards")
 
 root.mainloop()
 
