@@ -165,7 +165,7 @@ def runDownload():
 	print(downloadedSets)
 	for setName in downloadedSets:
 		print(setName)
-		zipfiles[setName] = zipfile.ZipFile(folder_var.get() + "/" + setName.upper() + ".zip", "w")
+		zipfiles[setName] = zipfile.ZipFile(folder_var.get() + "/" + setName.upper() + ".zip", "a")
 	for returnObject in returned:
 		if len(returnObject) == 2: # regular card
 			card, imageObject = returnObject # object has structue [dict<string><string>, BinaryData]
